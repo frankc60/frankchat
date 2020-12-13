@@ -1,17 +1,32 @@
 const express = require("express");
-const ejs = require("ejs");
-
-var app = express();
+const app = express();
+const path = require("path");
+const server = require("http").createServer(app);
+const io = require("socket.io")(server);
+const port = process.env.PORT || 3000;
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
 
-// use res.render to load up an ejs view file
+// Routing
+app.use(express.static(path.join(__dirname, "public")));
 
 // index page
 app.get("/", function (req, res) {
   res.render("pages/index");
 });
 
-app.listen(process.env.PORT);
-console.log("8080 is the magic portx");
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+
+  socket.on("chat", (msg) => {
+    console.log("message: " + msg);
+  });
+});
+
+server.listen(port, () => {
+  console.log("Server listening at port %d", port);
+});

@@ -11,9 +11,15 @@
 
 <main>
     <div class="jumbotron">
-        <h1>This is great</h1>
-        <p>Welcome to templating using EJS</p>
+        <h1>frankchat</h1>
+        <p>faster and better than zoom..</p>
     </div>
+    <div id="video">video</div>
+    <div id="messages"></div>
+    <form action="">
+      <input id="m" autocomplete="off" /><button id="btn" onclick="myFunction()">Send</button>
+    </form>
+  
 </main>
 
 <footer>
@@ -21,4 +27,17 @@
 </footer>
 
 </body>
+<script src="/socket.io/socket.io.js"></script>
+<script >
+  var socket = io();
+ 
+document.getElementById('btn').onclick = (e) => {
+    e.preventDefault();
+    console.log(e);
+    let msg = document.getElementById('m').value; 
+    document.getElementById('m').value = "";
+    socket.emit("chat",msg);
+}
+    
+</script>
 </html>
