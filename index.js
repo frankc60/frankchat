@@ -13,5 +13,5 @@ app.get("/", function (req, res) {
   res.render("pages/index");
 });
 
-app.listen(8080);
+app.listen(process.env.PORT);
 console.log("8080 is the magic portx");
