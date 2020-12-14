@@ -25,10 +25,16 @@ io.on("connection", (socket) => {
   console.log("users:" + userscount);
   regUsers.push(socket.id);
 
+  io.to(socket.id).emit("regAccept", {
+    ts: Date.now(),
+    msg: socket.id,
+    u: socket.id,
+  });
+
   io.to(socket.id).emit("chat", {
     ts: Date.now(),
     msg: "You are now registered, your id is " + socket.id + "",
-    u: "GOD",
+    u: "SYSTEM",
   });
 
   socket.broadcast.emit("chat", {
@@ -43,7 +49,7 @@ io.on("connection", (socket) => {
     console.log("users:" + userscount);
     socket.broadcast.emit("chat", {
       ts: Date.now(),
-      u: "GOD",
+      u: "SYSTEM",
       msg: "User just disconnected. Users: " + userscount,
     });
   });

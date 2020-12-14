@@ -46,7 +46,15 @@ document.getElementById('btn').onclick = (e) => {
 
 
 socket.on('regAccept', function(obj){
-    console.log("registed !!!!! " + obj.u + " == " + socket.id)
+    if(obj.u == socket.id) {
+        document.getElementById('video').innerHTML = `Me: ${socket.id}`;
+        console.log("registered! " + obj.u + " == " + socket.id)    
+    } else {
+        document.getElementById('video').innerHTML = `ERROR ERROR: ${socket.id}`;
+        console.log(`ERROR IN REGISTRATION, 500 ERROR`);
+
+    }
+    
     
 })
 
@@ -58,7 +66,7 @@ let [hour, minute, second] =  new Date(obj.ts).toLocaleTimeString("en-US").split
 if(obj.u == socket.id) {
     i = "<i>Me</i>"; 
 } else {
-    i = (obj.u).substr(0, 5);
+    i = (obj.u).substr(0, 6);
 }
 
         document.getElementById('messages').innerHTML += `<br/>${hour}:${minute}:${second} - ${i}: ${obj.msg}`;
