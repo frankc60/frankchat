@@ -16,14 +16,42 @@ app.get("/", function (req, res) {
   res.render("pages/index");
 });
 
+let userscount = 0;
+let regUsers = [];
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  console.log("new user connection: " + socket.id);
+
+  userscount++;
+  console.log("users:" + userscount);
+  regUsers.push(socket.id);
+
+  io.to(socket.id).emit("chat", {
+    ts: Date.now(),
+    msg: "You are now registered, your id is " + socket.id + "",
+    u: "GOD",
+  });
+
+  socket.broadcast.emit("chat", {
+    ts: Date.now(),
+    u: "GOD",
+    msg: "New User joined just now. Users: " + userscount,
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    userscount--;
+    console.log("users:" + userscount);
+    socket.broadcast.emit("chat", {
+      ts: Date.now(),
+      u: "GOD",
+      msg: "User just disconnected. Users: " + userscount,
+    });
   });
 
   socket.on("chat", (msg) => {
-    console.log("message: " + msg);
+    console.log("message: " + JSON.stringify(msg));
+    //socket.broadcast.emit("chat", msg);
+    io.emit("chat", msg);
   });
 });
 

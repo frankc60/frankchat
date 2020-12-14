@@ -14,7 +14,7 @@
         <h1>frankchat</h1>
         <p>faster and better than zoom..</p>
     </div>
-    <div id="video">video</div>
+    <div id="video"></div>
     <div id="messages"></div>
     <form action="">
       <input id="m" autocomplete="off" /><button id="btn" onclick="myFunction()">Send</button>
@@ -29,15 +29,40 @@
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script >
+
   var socket = io();
  
+
 document.getElementById('btn').onclick = (e) => {
     e.preventDefault();
-    console.log(e);
+    //console.log(e);
     let msg = document.getElementById('m').value; 
+    socket.emit("chat",{u: socket.id, msg:msg, ts: Date.now()});
     document.getElementById('m').value = "";
-    socket.emit("chat",msg);
+    //document.getElementById('messages').innerHTML += "<br/>"+msg;
+    //console.log("i am " + socket.id)
 }
+
+
+
+socket.on('regAccept', function(obj){
+    console.log("registed !!!!! " + obj.u + " == " + socket.id)
     
+})
+
+
+socket.on('chat', function(obj){
+    //alert(obj)
+let [month, date, year]    =  new Date(obj.ts).toLocaleDateString("en-US").split("/")
+let [hour, minute, second] =  new Date(obj.ts).toLocaleTimeString("en-US").split(/:| /)
+if(obj.u == socket.id) {
+    i = "<i>Me</i>"; 
+} else {
+    i = (obj.u).substr(0, 5);
+}
+
+        document.getElementById('messages').innerHTML += `<br/>${hour}:${minute}:${second} - ${i}: ${obj.msg}`;
+});
+
 </script>
 </html>
