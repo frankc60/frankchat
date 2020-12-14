@@ -33,13 +33,18 @@ io.on("connection", (socket) => {
 
   io.to(socket.id).emit("chat", {
     ts: Date.now(),
-    msg: "You are now registered, your id is " + socket.id + "",
+    msg:
+      "You are now registered, as user #" +
+      userscount +
+      ", your id is " +
+      socket.id +
+      "",
     u: "SYSTEM",
   });
 
   socket.broadcast.emit("chat", {
     ts: Date.now(),
-    u: "GOD",
+    u: "SYSTEM",
     msg: "New User joined just now. Users: " + userscount,
   });
 

@@ -47,7 +47,7 @@ document.getElementById('btn').onclick = (e) => {
 
 socket.on('regAccept', function(obj){
     if(obj.u == socket.id) {
-        document.getElementById('video').innerHTML = `Me: ${socket.id}`;
+        document.getElementById('video').innerHTML = `Me: <strong>${(socket.id).substr(0, 6)}</strong>${(socket.id).substr(6)}`;
         console.log("registered! " + obj.u + " == " + socket.id)    
     } else {
         document.getElementById('video').innerHTML = `ERROR ERROR: ${socket.id}`;
