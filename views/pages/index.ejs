@@ -14,6 +14,7 @@
         <h1>frankchat</h1>
         <p>faster and better than zoom..</p>
     </div>
+    <div id="users">x</div>
     <div id="video"></div>
     <div id="messages"></div>
     <form action="">
@@ -54,22 +55,37 @@ socket.on('regAccept', function(obj){
         console.log(`ERROR IN REGISTRATION, 500 ERROR`);
 
     }
-    
-    
 })
+
+socket.on("users", function(arr) {
+
+    const usrs = document.getElementById('video');
+    usrs.innerHTML = "";
+    arr.forEach((element,ndx) => {
+        if(socket.id == element) {
+usrs.innerHTML += `<br/>${ndx+1}_<strong><u>${element}</u></strong>`; 
+        } else {
+usrs.innerHTML += `<br/>${ndx+1}_${element}`; 
+        }
+        
+
+
+    });
+
+})
+
 
 
 socket.on('chat', function(obj){
     //alert(obj)
-let [month, date, year]    =  new Date(obj.ts).toLocaleDateString("en-US").split("/")
-let [hour, minute, second] =  new Date(obj.ts).toLocaleTimeString("en-US").split(/:| /)
-if(obj.u == socket.id) {
-    i = "<i>Me</i>"; 
-} else {
-    i = (obj.u).substr(0, 6);
-}
-
-        document.getElementById('messages').innerHTML += `<br/>${hour}:${minute}:${second} - ${i}: ${obj.msg}`;
+    let [month, date, year]    =  new Date(obj.ts).toLocaleDateString("en-US").split("/")
+    let [hour, minute, second] =  new Date(obj.ts).toLocaleTimeString("en-US").split(/:| /)
+    if(obj.u == socket.id) {
+        i = "<i>Me</i>"; 
+    } else {
+        i = (obj.u).substr(0, 6);
+    }
+    document.getElementById('messages').innerHTML += `<br/>${hour}:${minute}:${second} - ${i}: ${obj.msg}`;
 });
 
 </script>

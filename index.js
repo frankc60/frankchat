@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
 
   userscount++;
   console.log("users:" + userscount);
-  regUsers.push(socket.id);
+  //regUsers.push(socket.id);
 
   io.to(socket.id).emit("regAccept", {
     ts: Date.now(),
@@ -37,7 +37,7 @@ io.on("connection", (socket) => {
       "You are now registered, as user #" +
       userscount +
       ", your id is " +
-      socket.id +
+      socket.id.substr(0, 6) +
       "",
     u: "SYSTEM",
   });
@@ -48,10 +48,18 @@ io.on("connection", (socket) => {
     msg: "New User joined just now. Users: " + userscount,
   });
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
+  //io.emit("chat", msg);
+
+  io.emit("users", regUser("add", socket.id));
+
+  socket.on("disconnect", (id) => {
+    console.log("user disconnected cc " + socket.id);
     userscount--;
     console.log("users:" + userscount);
+
+    let i = regUsers.indexOf(socket.id);
+    regUsers.splice(i, 1);
+
     socket.broadcast.emit("chat", {
       ts: Date.now(),
       u: "SYSTEM",
@@ -69,3 +77,21 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log("Server listening at port %d", port);
 });
+
+const regUser = (mth = "add", userid) => {
+  if (mth == "add") {
+    console.log("regUser - ADD new user:" + userid);
+    regUsers.push(userid);
+    let filtered = regUsers;
+  } else {
+    console.log("regUser - REMOVE user:" + userid);
+    let filtered = regUsers.filter(function (value, index, arr) {
+      return value != userid;
+    });
+
+    return filtered;
+  }
+  //var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+  return regUsers;
+};
